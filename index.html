@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FindMyFlip.ai — Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f0e8;
+      --orange: #e85d04;
+      --orange-dim: #c44b00;
+      --gray: #1a1a1a;
+      --gray-mid: #2e2e2e;
+      --text-muted: #666;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* Animated grid background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,93,4,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,93,4,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridDrift 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes gridDrift {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(60px); }
+    }
+
+    /* Radial glow */
+    .glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(232,93,4,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      z-index: 0;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.8; transform: translate(-50%, -60%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -60%) scale(1.08); }
+    }
+
+    /* Main layout */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    /* Top badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232,93,4,0.12);
+      border: 1px solid rgba(232,93,4,0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 40px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* Logo / wordmark */
+    .wordmark {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 12vw, 140px);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      animation: fadeUp 0.8s 0.1s ease both;
+      position: relative;
+    }
+
+    .wordmark .find { color: var(--white); }
+    .wordmark .my { color: var(--white); }
+    .wordmark .flip { color: var(--orange); }
+    .wordmark .dot-ai {
+      font-size: 0.38em;
+      color: var(--text-muted);
+      vertical-align: super;
+      letter-spacing: 0.05em;
+    }
+
+    /* Tagline */
+    .tagline {
+      font-size: clamp(15px, 2.5vw, 19px);
+      font-weight: 300;
+      color: rgba(245,240,232,0.55);
+      max-width: 480px;
+      line-height: 1.6;
+      margin-top: 28px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .tagline strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* Divider */
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
+      margin: 40px auto;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    /* Coming soon block */
+    .coming-soon {
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .coming-soon-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .coming-soon-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 5vw, 42px);
+      letter-spacing: 0.06em;
+      color: var(--white);
+    }
+
+    /* Email capture */
+    .email-section {
+      margin-top: 44px;
+      animation: fadeUp 0.8s 0.5s ease both;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .email-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .email-form {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--gray-mid);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .email-form:focus-within {
+      border-color: var(--orange);
+    }
+
+    .email-input {
+      flex: 1;
+      background: var(--gray);
+      border: none;
+      outline: none;
+      padding: 14px 18px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--white);
+    }
+
+    .email-input::placeholder { color: var(--text-muted); }
+
+    .email-btn {
+      background: var(--orange);
+      border: none;
+      padding: 14px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: white;
+      cursor: pointer;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+      transition: background 0.2s;
+    }
+
+    .email-btn:hover { background: var(--orange-dim); }
+
+    .email-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    /* Stats row */
+    .stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 60px;
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      bottom: 24px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      z-index: 1;
+    }
+
+    /* Scan line animation across wordmark */
+    .wordmark-wrap {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+
+    .wordmark-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      animation: scanLine 4s ease-in-out infinite;
+    }
+
+    @keyframes scanLine {
+      0% { left: -60%; }
+      100% { left: 160%; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .stats { gap: 28px; }
+      .email-form { flex-direction: column; border-radius: 6px; }
+      .email-btn { border-radius: 0 0 5px 5px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+
+  <main class="page">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      The future of investing is here
+    </div>
+
+    <div class="wordmark-wrap">
+      <div class="wordmark">
+        <span class="find">FIND</span><span class="my">MY</span><span class="flip">FLIP</span><span class="dot-ai">.ai</span>
+      </div>
+    </div>
+
+    <p class="tagline">
+      AI-powered deal sourcing for <strong>real estate investors</strong>.<br/>
+      Daily leads. Real equity. Your market.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="coming-soon">
+      <div class="coming-soon-label">Status</div>
+      <div class="coming-soon-text">Coming Soon</div>
+    </div>
+
+    <div class="email-section">
+      <div class="email-label">Get early access — be first to know when we launch</div>
+      <div class="email-form">
+        <input class="email-input" type="email" placeholder="your@email.com" />
+        <button class="email-btn">Notify Me</button>
+      </div>
+      <div class="email-note">No spam. Just your launch invite.</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number" style="font-size:52px; line-height:0.7;">∞</div>
+        <div class="stat-label">ZIP Codes</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">Daily</div>
+        <div class="stat-label">Deal Refresh</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">AI</div>
+        <div class="stat-label">ARV Filtered</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 FindMyFlip.ai &mdash; Deals Nationwide
+  </footer>
+</body>
+</html>
