@@ -282,14 +282,16 @@
 
     /* Footer */
     .footer {
-      position: fixed;
-      bottom: 24px;
+      position: relative;
+      bottom: auto;
       left: 0;
       right: 0;
       text-align: center;
       font-size: 11px;
       color: var(--text-muted);
       letter-spacing: 0.05em;
+      margin-top: 24px;
+      padding-bottom: 24px;
       z-index: 1;
     }
 
@@ -366,7 +368,7 @@
 
     <div class="email-section">
       <div class="email-label">Be the first to know when we launch</div>
-      <div class="email-note" style="margin-bottom: 12px; color: var(--orange); font-size: 12px; letter-spacing: 0.03em;">First 100 founding members get a special rate — locked in forever.</div>
+      <div class="email-note" style="margin-bottom: 12px; color: var(--orange); font-size: 12px; letter-spacing: 0.03em;">Founding members get a special rate, locked in forever.</div>
       <div class="email-form">
         <input class="email-input" type="email" placeholder="your@email.com" />
         <button class="email-btn">Notify Me</button>
