@@ -325,6 +325,10 @@
       .stats { gap: 28px; }
       .email-form { flex-direction: column; border-radius: 6px; }
       .email-btn { border-radius: 0 0 5px 5px; }
+      .tagline .break { display: block; }
+    }
+    @media (min-width: 481px) {
+      .tagline .break { display: inline; }
     }
   </style>
 </head>
@@ -344,20 +348,25 @@
       </div>
     </div>
 
-    <p class="tagline">
-      AI-powered deal sourcing for <strong>real estate investors</strong>.<br/>
+    <p class="tagline" style="margin-top: 16px; font-size: 0.95em; opacity: 0.85;">
       Daily leads. Real equity. Your market.
     </p>
 
     <div class="divider"></div>
 
-    <div class="coming-soon">
+    <p class="tagline" style="margin-top: 8px;">
+      AI-powered deal sourcing for <span class="break"><strong>real estate investors</strong>.</span><br/>
+      <span style="font-size: 0.85em; opacity: 0.7;">Automatically filtered by ARV so every lead is worth your time.</span>
+    </p>
+
+    <div class="coming-soon" style="margin-top: 48px;">
       <div class="coming-soon-label">Status</div>
       <div class="coming-soon-text">Coming Soon</div>
     </div>
 
     <div class="email-section">
-      <div class="email-label">Get early access — be first to know when we launch</div>
+      <div class="email-label">Be the first to know when we launch</div>
+      <div class="email-note" style="margin-bottom: 12px; color: var(--orange); font-size: 12px; letter-spacing: 0.03em;">First 100 founding members get a special rate — locked in forever.</div>
       <div class="email-form">
         <input class="email-input" type="email" placeholder="your@email.com" />
         <button class="email-btn">Notify Me</button>
@@ -365,7 +374,7 @@
       <div class="email-note">No spam. Just your launch invite.</div>
     </div>
 
-    <div class="stats">
+    <div class="stats" style="margin-bottom: 60px;">
       <div class="stat">
         <div class="stat-number" style="font-family: Georgia, 'Times New Roman', serif; font-size: 62px;">&#8734;</div>
         <div class="stat-label">ZIP Codes</div>
@@ -382,7 +391,7 @@
   </main>
 
   <footer class="footer">
-    &copy; 2026 FindMyFlip.ai &mdash; Deals Nationwide
+    &copy; 2026 FindMyFlip.ai &mdash; Built by investors, for investors
   </footer>
 </body>
 </html>
