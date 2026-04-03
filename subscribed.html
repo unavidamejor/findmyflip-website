@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FindMyFlip.ai — You're In!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f0e8;
+      --orange: #e85d04;
+      --orange-dim: #c44b00;
+      --gray: #1a1a1a;
+      --gray-mid: #2e2e2e;
+      --text-muted: #666;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* Animated grid background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,93,4,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,93,4,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridDrift 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes gridDrift {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(60px); }
+    }
+
+    /* Radial glow */
+    .glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(232,93,4,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      z-index: 0;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.8; transform: translate(-50%, -60%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -60%) scale(1.08); }
+    }
+
+    /* Main layout */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    /* Checkmark circle */
+    .check-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(232,93,4,0.12);
+      border: 2px solid rgba(232,93,4,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 36px;
+      animation: fadeUp 0.6s ease both, pulse 3s ease-in-out 0.6s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(232,93,4,0.3); }
+      50% { box-shadow: 0 0 0 12px rgba(232,93,4,0); }
+    }
+
+    .check-circle svg {
+      width: 36px;
+      height: 36px;
+      stroke: var(--orange);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Wordmark */
+    .wordmark-wrap {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      margin-bottom: 36px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .wordmark-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      animation: scanLine 4s ease-in-out infinite;
+    }
+
+    @keyframes scanLine {
+      0% { left: -60%; }
+      100% { left: 160%; }
+    }
+
+    .wordmark {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 10vw, 110px);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+    }
+
+    .wordmark .find { color: var(--white); }
+    .wordmark .my { color: var(--white); }
+    .wordmark .flip { color: var(--orange); }
+    .wordmark .dot-ai {
+      font-size: 0.38em;
+      color: var(--text-muted);
+      vertical-align: super;
+      letter-spacing: 0.05em;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232,93,4,0.12);
+      border: 1px solid rgba(232,93,4,0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 36px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* Headline */
+    .headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 7vw, 72px);
+      line-height: 1;
+      letter-spacing: 0.03em;
+      color: var(--white);
+      margin-bottom: 20px;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .headline span { color: var(--orange); }
+
+    /* Subtext */
+    .subtext {
+      font-size: clamp(15px, 2.5vw, 18px);
+      font-weight: 300;
+      color: rgba(245,240,232,0.6);
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .subtext strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* Divider */
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
+      margin: 0 auto 48px;
+      animation: fadeUp 0.8s 0.5s ease both;
+    }
+
+    /* Back button */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--gray-mid);
+      border-radius: 6px;
+      padding: 12px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: border-color 0.2s, color 0.2s;
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+
+    .back-btn:hover {
+      border-color: var(--orange);
+      color: var(--white);
+    }
+
+    /* Footer */
+    .footer {
+      position: relative;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-top: 60px;
+      padding-bottom: 24px;
+      z-index: 1;
+      animation: fadeUp 0.8s 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .headline { font-size: clamp(30px, 9vw, 48px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+
+  <main class="page">
+
+    <div class="check-circle">
+      <svg viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <div class="wordmark-wrap">
+      <div class="wordmark">
+        <span class="find">FIND</span><span class="my">MY</span><span class="flip">FLIP</span><span class="dot-ai">.ai</span>
+      </div>
+    </div>
+
+    <div class="badge">
+      <span class="badge-dot"></span>
+      You're on the list
+    </div>
+
+    <h1 class="headline">Thanks for<br/><span>Subscribing!</span></h1>
+
+    <p class="subtext">
+      Get your cash ready —<br/>
+      <strong>investors using this tool are closing on properties fast.</strong><br/>
+      We'll be in touch with your early access invite soon.
+    </p>
+
+    <div class="divider"></div>
+
+    <a href="https://findmyflip.ai" class="back-btn">
+      ← Back to FindMyFlip.ai
+    </a>
+
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 FindMyFlip.ai &mdash; Built by investors, for investors
+  </footer>
+
+</body>
+</html>
