@@ -369,10 +369,15 @@
     <div class="email-section">
       <div class="email-label">Be the first to know when we launch</div>
       <div class="email-note" style="margin-bottom: 12px; color: var(--orange); font-size: 12px; letter-spacing: 0.03em;">Founding members get a special rate, locked in forever.</div>
-      <div class="email-form">
-        <input class="email-input" type="email" placeholder="your@email.com" />
-        <button class="email-btn">Notify Me</button>
-      </div>
+      <form id="sib-form" method="POST" action="https://289d9d9b.sibforms.com/serve/MUIFAOquMfcGokxHtTbxKFfygAwKSa0e603AAlp1P0W40bvLLIfT_T5xDyjJGOccU9EyKGNylakB0B8JA76_dFEnKi-XJwItd6PxHjxlXSFcJd7CmmNaF733INQvFQB83ZsJtBxrAtmqvaMGZ-Rzi9HGBb3wFe0EqPk6uBCLfhNgc0pT6nLJ4HNpqJ3_QKo15IgT22Dn_pvc-dhTmw==" style="width:100%;">
+        <div class="email-form">
+          <input class="email-input" type="email" id="EMAIL" name="EMAIL" placeholder="your@email.com" autocomplete="off" data-required="true" required />
+          <button class="email-btn" type="submit">Notify Me</button>
+        </div>
+        <input type="text" name="email_address_check" value="" style="display:none;">
+        <input type="hidden" name="locale" value="en">
+        <input type="hidden" name="html_type" value="simple">
+      </form>
       <div class="email-note">No spam. Just your launch invite.</div>
     </div>
 
